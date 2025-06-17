@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTrack - Personal Finance Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-white w-64 border-r border-gray-200 flex flex-col">
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-2xl font-bold text-blue-600 flex items-center">
+                    <i class="fas fa-wallet mr-2"></i> FinTrack
+                </h1>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <nav class="p-4">
+                    <div class="mb-6">
+                        <p class="text-xs uppercase font-semibold text-gray-500 mb-2">Dashboard</p>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg bg-blue-50 text-blue-600 font-medium">
+                            <i class="fas fa-home mr-3"></i> Overview
+                        </a>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-xs uppercase font-semibold text-gray-500 mb-2">Transactions</p>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100 mb-1">
+                            <i class="fas fa-money-bill-wave mr-3"></i> Income
+                        </a>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100 mb-1">
+                            <i class="fas fa-shopping-cart mr-3"></i> Expenses
+                        </a>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-exchange-alt mr-3"></i> Transfers
+                        </a>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-xs uppercase font-semibold text-gray-500 mb-2">Planning</p>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100 mb-1">
+                            <i class="fas fa-piggy-bank mr-3"></i> Savings Goals
+                        </a>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100 mb-1">
+                            <i class="fas fa-chart-line mr-3"></i> Investments
+                        </a>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-hand-holding-usd mr-3"></i> Debts
+                        </a>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-xs uppercase font-semibold text-gray-500 mb-2">Reports</p>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100 mb-1">
+                            <i class="fas fa-chart-pie mr-3"></i> Analytics
+                        </a>
+                        <a href="#" class="flex items-center py-2 px-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-file-alt mr-3"></i> Reports
+                        </a>
+                    </div>
+                </nav>
+            </div>
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                        JD
+                    </div>
+                    <div class="ml-3">
+                        <p class="font-medium">John Doe</p>
+                        <p class="text-xs text-gray-500">john@example.com</p>
+                    </div>
+                    <button class="ml-auto text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto">
+            <header class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <button class="mr-4 text-gray-500 hover:text-gray-700 md:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold">Dashboard</h2>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative mr-4">
+                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <main class="p-6">
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 font-medium">Total Balance</h3>
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold mb-2">$12,345.67</p>
+                        <p class="text-sm text-green-500 font-medium">
+                            <i class="fas fa-arrow-up mr-1"></i> 5.2% from last month
+                        </p>
+                    </div>
+                    
+                    <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 font-medium">Income</h3>
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold mb-2">$4,500.00</p>
+                        <p class="text-sm text-green-500 font-medium">
+                            <i class="fas fa-arrow-up mr-1"></i> 10.5% from last month
+                        </p>
+                    </div>
+                    
+                    <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 font-medium">Expenses</h3>
+                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold mb-2">$2,800.50</p>
+                        <p class="text-sm text-red-500 font-medium">
+                            <i class="fas fa-arrow-down mr-1"></i> 3.2% from last month
+                        </p>
+                    </div>
+                    
+                    <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 font-medium">Savings</h3>
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold mb-2">$1,750.00</p>
+                        <p class="text-sm text-green-500 font-medium">
+                            <i class="fas fa-arrow-up mr-1"></i> 8.7% from last month
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2 card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-semibold">Income vs Expenses</h3>
+                            <div class="flex">
+                                <button class="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-l-lg">Month</button>
+                                <button class="px-3 py-1 text-sm border-l border-blue-100 text-gray-600">Quarter</button>
+                                <button class="px-3 py-1 text-sm border-l border-blue-100 text-gray-600 rounded-r-lg">Year</button>
+                            </div>
+                        </div>
+                        <canvas id="incomeExpenseChart" height="250"></canvas>
+                    </div>
+                    
+                    <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <h3 class="font-semibold mb-6">Expense Categories</h3>
+                        <canvas id="expenseCategoryChart" height="250"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Recent Transactions and Goals -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-semibold">Recent Transactions</h3>
+                                <button class="text-blue-600 font-medium text-sm">View All</button>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Salary Deposit</p>
+                                        <p class="text-sm text-gray-500">Salary • June 1, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-green-600">+$3,500.00</p>
+                                        <p class="text-sm text-gray-500">Bank Account</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-4">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Grocery Shopping</p>
+                                        <p class="text-sm text-gray-500">Food • June 2, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-red-600">-$125.75</p>
+                                        <p class="text-sm text-gray-500">Credit Card</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Transfer to Savings</p>
+                                        <p class="text-sm text-gray-500">Transfer • June 3, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-purple-600">-$500.00</p>
+                                        <p class="text-sm text-gray-500">Savings Account</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-4">
+                                        <i class="fas fa-utensils"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Dinner Out</p>
+                                        <p class="text-sm text-gray-500">Dining • June 3, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-red-600">-$45.30</p>
+                                        <p class="text-sm text-gray-500">Credit Card</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-semibold">Upcoming Bills</h3>
+                                <button class="text-blue-600 font-medium text-sm">View All</button>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mr-4">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Electricity Bill</p>
+                                        <p class="text-sm text-gray-500">Due June 10, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">$85.00</p>
+                                        <button class="text-sm text-blue-600 font-medium">Pay Now</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                                        <i class="fas fa-wifi"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Internet Bill</p>
+                                        <p class="text-sm text-gray-500">Due June 15, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">$65.00</p>
+                                        <button class="text-sm text-blue-600 font-medium">Pay Now</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-4">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Credit Card Payment</p>
+                                        <p class="text-sm text-gray-500">Due June 20, 2023</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">$450.00</p>
+                                        <button class="text-sm text-blue-600 font-medium">Pay Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-semibold">Savings Goals</h3>
+                                <button class="text-blue-600 font-medium text-sm">Add Goal</button>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <p class="font-medium">Emergency Fund</p>
+                                        <p class="text-sm font-medium">$1,200/$5,000</p>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-blue-600 h-2 rounded-full" style="width: 24%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">24% completed</p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <p class="font-medium">Vacation Fund</p>
+                                        <p class="text-sm font-medium">$750/$3,000</p>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-600 h-2 rounded-full" style="width: 25%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">25% completed</p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <p class="font-medium">New Laptop</p>
+                                        <p class="text-sm font-medium">$300/$1,200</p>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-purple-600 h-2 rounded-full" style="width: 25%"></div>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">25% completed</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-hover bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-semibold">Investment Portfolio</h3>
+                                <button class="text-blue-600 font-medium text-sm">View All</button>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Tech Stocks</p>
+                                        <p class="text-sm text-gray-500">AAPL, MSFT, GOOGL</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">$3,450.00</p>
+                                        <p class="text-sm text-green-500">+12.5%</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
+                                        <i class="fas fa-coins"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Cryptocurrency</p>
+                                        <p class="text-sm text-gray-500">BTC, ETH</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">$1,250.00</p>
+                                        <p class="text-sm text-red-500">-5.2%</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4">
+                                        <i class="fas fa-landmark"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium">Index Funds</p>
+                                        <p class="text-sm text-gray-500">VTI, VOO</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium">$2,100.00</p>
+                                        <p class="text-sm text-green-500">+7.8%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="addTransactionModal">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md">
+            <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Add New Transaction</h3>
+                <button class="text-gray-500 hover:text-gray-700" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Transaction Type</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button class="py-2 px-4 border rounded-lg text-sm font-medium bg-blue-50 text-blue-600 border-blue-100">
+                            Income
+                        </button>
+                        <button class="py-2 px-4 border rounded-lg text-sm font-medium text-gray-600 border-gray-200">
+                            Expense
+                        </button>
+                        <button class="py-2 px-4 border rounded-lg text-sm font-medium text-gray-600 border-gray-200">
+                            Transfer
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Amount</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+                        <input type="number" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="0.00">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Category</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option>Select a category</option>
+                        <option>Salary</option>
+                        <option>Bonus</option>
+                        <option>Investment</option>
+                        <option>Other Income</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Description</label>
+                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Optional">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Account</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option>Bank Account</option>
+                        <option>Credit Card</option>
+                        <option>Savings Account</option>
+                        <option>Investment Account</option>
+                    </select>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Add Transaction
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fixed bottom-6 right-6">
+        <button class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" id="addTransactionBtn">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://your-supabase-url.supabase.co';
+        const supabaseKey = 'your-supabase-key';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        
+        // Check if user is logged in
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.href = '/login';
+            }
+        }
+        
+        // Initialize charts
+        function initCharts() {
+            // Income vs Expense Chart
+            const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+            const incomeExpenseChart = new Chart(incomeExpenseCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: [3000, 3200, 3500, 3800, 4000, 4500],
+                            backgroundColor: '#10B981',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [2200, 2400, 2600, 2800, 3000, 2800],
+                            backgroundColor: '#EF4444',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: false,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            stacked: false,
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Expense Category Chart
+            const expenseCategoryCtx = document.getElementById('expenseCategoryChart').getContext('2d');
+            const expenseCategoryChart = new Chart(expenseCategoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Housing', 'Food', 'Transport', 'Entertainment', 'Utilities', 'Others'],
+                    datasets: [{
+                        data: [800, 500, 300, 200, 150, 50],
+                        backgroundColor: [
+                            '#3B82F6',
+                            '#10B981',
+                            '#F59E0B',
+                            '#EF4444',
+                            '#8B5CF6',
+                            '#64748B'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Modal functionality
+        document.getElementById('addTransactionBtn').addEventListener('click', function() {
+            document.getElementById('addTransactionModal').classList.remove('hidden');
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('addTransactionModal').classList.add('hidden');
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('addTransactionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            initCharts();
+            
+            // Simulate loading data
+            setTimeout(() => {
+                document.querySelectorAll('.skeleton').forEach(el => {
+                    el.classList.remove('skeleton');
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
