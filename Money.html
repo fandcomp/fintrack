@@ -120,7 +120,7 @@
                         <p class="font-medium">John Doe</p>
                         <p class="text-xs text-gray-500">john@example.com</p>
                     </div>
-                    <button class="ml-auto text-gray-500 hover:text-gray-700">
+                    <button class="ml-auto text-gray-500 hover:text-gray-700" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </div>
@@ -232,62 +232,8 @@
                                 <button class="text-blue-600 font-medium text-sm">View All</button>
                             </div>
                             
-                            <div class="space-y-4">
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Salary Deposit</p>
-                                        <p class="text-sm text-gray-500">Salary • June 1, 2023</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium text-green-600">+$3,500.00</p>
-                                        <p class="text-sm text-gray-500">Bank Account</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-4">
-                                        <i class="fas fa-shopping-bag"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Grocery Shopping</p>
-                                        <p class="text-sm text-gray-500">Food • June 2, 2023</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium text-red-600">-$125.75</p>
-                                        <p class="text-sm text-gray-500">Credit Card</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
-                                        <i class="fas fa-exchange-alt"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Transfer to Savings</p>
-                                        <p class="text-sm text-gray-500">Transfer • June 3, 2023</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium text-purple-600">-$500.00</p>
-                                        <p class="text-sm text-gray-500">Savings Account</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-4">
-                                        <i class="fas fa-utensils"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Dinner Out</p>
-                                        <p class="text-sm text-gray-500">Dining • June 3, 2023</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium text-red-600">-$45.30</p>
-                                        <p class="text-sm text-gray-500">Credit Card</p>
-                                    </div>
-                                </div>
+                            <div class="space-y-4" id="recentTransactions">
+                                <!-- Transactions will be loaded dynamically -->
                             </div>
                         </div>
                         
@@ -308,34 +254,6 @@
                                     </div>
                                     <div class="text-right">
                                         <p class="font-medium">$85.00</p>
-                                        <button class="text-sm text-blue-600 font-medium">Pay Now</button>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
-                                        <i class="fas fa-wifi"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Internet Bill</p>
-                                        <p class="text-sm text-gray-500">Due June 15, 2023</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium">$65.00</p>
-                                        <button class="text-sm text-blue-600 font-medium">Pay Now</button>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-4">
-                                        <i class="fas fa-credit-card"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Credit Card Payment</p>
-                                        <p class="text-sm text-gray-500">Due June 20, 2023</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium">$450.00</p>
                                         <button class="text-sm text-blue-600 font-medium">Pay Now</button>
                                     </div>
                                 </div>
@@ -361,28 +279,6 @@
                                     </div>
                                     <p class="text-xs text-gray-500 mt-1">24% completed</p>
                                 </div>
-                                
-                                <div>
-                                    <div class="flex items-center justify-between mb-2">
-                                        <p class="font-medium">Vacation Fund</p>
-                                        <p class="text-sm font-medium">$750/$3,000</p>
-                                    </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-green-600 h-2 rounded-full" style="width: 25%"></div>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1">25% completed</p>
-                                </div>
-                                
-                                <div>
-                                    <div class="flex items-center justify-between mb-2">
-                                        <p class="font-medium">New Laptop</p>
-                                        <p class="text-sm font-medium">$300/$1,200</p>
-                                    </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-purple-600 h-2 rounded-full" style="width: 25%"></div>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mt-1">25% completed</p>
-                                </div>
                             </div>
                         </div>
                         
@@ -404,34 +300,6 @@
                                     <div class="text-right">
                                         <p class="font-medium">$3,450.00</p>
                                         <p class="text-sm text-green-500">+12.5%</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4">
-                                        <i class="fas fa-coins"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Cryptocurrency</p>
-                                        <p class="text-sm text-gray-500">BTC, ETH</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium">$1,250.00</p>
-                                        <p class="text-sm text-red-500">-5.2%</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
-                                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-4">
-                                        <i class="fas fa-landmark"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium">Index Funds</p>
-                                        <p class="text-sm text-gray-500">VTI, VOO</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="font-medium">$2,100.00</p>
-                                        <p class="text-sm text-green-500">+7.8%</p>
                                     </div>
                                 </div>
                             </div>
@@ -456,15 +324,9 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Transaction Type</label>
                     <div class="grid grid-cols-3 gap-2">
-                        <button class="py-2 px-4 border rounded-lg text-sm font-medium bg-blue-50 text-blue-600 border-blue-100">
-                            Income
-                        </button>
-                        <button class="py-2 px-4 border rounded-lg text-sm font-medium text-gray-600 border-gray-200">
-                            Expense
-                        </button>
-                        <button class="py-2 px-4 border rounded-lg text-sm font-medium text-gray-600 border-gray-200">
-                            Transfer
-                        </button>
+                        <button class="py-2 px-4 border rounded-lg text-sm font-medium bg-blue-50 text-blue-600 border-blue-100" data-type="Income">Income</button>
+                        <button class="py-2 px-4 border rounded-lg text-sm font-medium text-gray-600 border-gray-200" data-type="Expense">Expense</button>
+                        <button class="py-2 px-4 border rounded-lg text-sm font-medium text-gray-600 border-gray-200" data-type="Transfer">Transfer</button>
                     </div>
                 </div>
                 
@@ -472,13 +334,13 @@
                     <label class="block text-gray-700 text-sm font-medium mb-2">Amount</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
-                        <input type="number" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="0.00">
+                        <input type="number" id="transactionAmount" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="0.00">
                     </div>
                 </div>
                 
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Category</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="transactionCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option>Select a category</option>
                         <option>Salary</option>
                         <option>Bonus</option>
@@ -489,17 +351,17 @@
                 
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Date</label>
-                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="date" id="transactionDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Description</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Optional">
+                    <input type="text" id="transactionDescription" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Optional">
                 </div>
                 
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Account</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="transactionAccount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option>Bank Account</option>
                         <option>Credit Card</option>
                         <option>Savings Account</option>
@@ -508,7 +370,7 @@
                 </div>
                 
                 <div class="flex justify-end">
-                    <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <button id="saveTransactionBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         Add Transaction
                     </button>
                 </div>
@@ -524,22 +386,83 @@
     </div>
 
     <script>
-        // Initialize Supabase
-        const supabaseUrl = 'https://your-supabase-url.supabase.co';
-        const supabaseKey = 'your-supabase-key';
+        // Initialize Supabase (ganti dengan kredensial Anda)
+        const supabaseUrl = 'https://mysqauhoqjfwbxemluff.supabase.co'; // Ganti dengan URL Supabase Anda
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15c3FhdWhvcWpmd2J4ZW1sdWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTM3MDksImV4cCI6MjA2NTcyOTcwOX0.KasP79jM_6HJke1Fj9Evv4XQyqlglteBYJFGpQUgsjs'; // Ganti dengan Anon Key Supabase Anda
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         
         // Check if user is logged in
         async function checkAuth() {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
-                window.location.href = '/login';
+                window.location.href = '/login.html';
+            } else {
+                document.querySelector('.sidebar .p-4.border-t .flex .ml-3 p.font-medium').textContent = user.email.split('@')[0];
+                document.querySelector('.sidebar .p-4.border-t .flex .ml-3 p.text-xs').textContent = user.email;
+            }
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = '/login.html';
+        });
+        
+        // Function to add a transaction
+        async function addTransaction(transaction) {
+            const { data: { user } } = await supabase.auth.getUser();
+            transaction.user_id = user.id;
+            const { data, error } = await supabase
+                .from('transactions')
+                .insert([transaction]);
+            if (error) {
+                console.error('Error adding transaction:', error);
+            } else {
+                console.log('Transaction added:', data);
+                loadTransactions(); // Refresh transactions
+            }
+        }
+
+        // Function to load transactions
+        async function loadTransactions() {
+            const { data: { user } } = await supabase.auth.getUser();
+            const { data, error } = await supabase
+                .from('transactions')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('date', { ascending: false })
+                .limit(5);
+            if (error) {
+                console.error('Error fetching transactions:', error);
+            } else {
+                const transactionList = document.getElementById('recentTransactions');
+                transactionList.innerHTML = '';
+                data.forEach(tx => {
+                    const iconClass = tx.type === 'Income' ? 'fa-money-bill-wave' : tx.type === 'Expense' ? 'fa-shopping-bag' : 'fa-exchange-alt';
+                    const bgColor = tx.type === 'Income' ? 'bg-green-100' : tx.type === 'Expense' ? 'bg-red-100' : 'bg-blue-100';
+                    const textColor = tx.type === 'Income' ? 'text-green-600' : tx.type === 'Expense' ? 'text-red-600' : 'text-blue-600';
+                    const amountSign = tx.type === 'Income' ? '+' : '-';
+                    transactionList.innerHTML += `
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="w-10 h-10 rounded-full ${bgColor} flex items-center justify-center ${textColor} mr-4">
+                                <i class="fas ${iconClass}"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium">${tx.description || tx.category}</p>
+                                <p class="text-sm text-gray-500">${tx.category} • ${new Date(tx.date).toLocaleDateString()}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-medium ${textColor}">${amountSign}$${tx.amount.toFixed(2)}</p>
+                                <p class="text-sm text-gray-500">${tx.account}</p>
+                            </div>
+                        </div>
+                    `;
+                });
             }
         }
         
         // Initialize charts
         function initCharts() {
-            // Income vs Expense Chart
             const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
             const incomeExpenseChart = new Chart(incomeExpenseCtx, {
                 type: 'bar',
@@ -563,33 +486,16 @@
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                        }
+                        legend: { position: 'top' },
+                        tooltip: { mode: 'index', intersect: false }
                     },
                     scales: {
-                        x: {
-                            stacked: false,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            stacked: false,
-                            beginAtZero: true,
-                            grid: {
-                                drawBorder: false
-                            }
-                        }
+                        x: { stacked: false, grid: { display: false } },
+                        y: { stacked: false, beginAtZero: true, grid: { drawBorder: false } }
                     }
                 }
             });
             
-            // Expense Category Chart
             const expenseCategoryCtx = document.getElementById('expenseCategoryChart').getContext('2d');
             const expenseCategoryChart = new Chart(expenseCategoryCtx, {
                 type: 'doughnut',
@@ -597,30 +503,20 @@
                     labels: ['Housing', 'Food', 'Transport', 'Entertainment', 'Utilities', 'Others'],
                     datasets: [{
                         data: [800, 500, 300, 200, 150, 50],
-                        backgroundColor: [
-                            '#3B82F6',
-                            '#10B981',
-                            '#F59E0B',
-                            '#EF4444',
-                            '#8B5CF6',
-                            '#64748B'
-                        ],
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#64748B'],
                         borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        }
-                    }
+                    plugins: { legend: { position: 'right' } }
                 }
             });
         }
         
         // Modal functionality
+        let selectedType = 'Income';
         document.getElementById('addTransactionBtn').addEventListener('click', function() {
             document.getElementById('addTransactionModal').classList.remove('hidden');
         });
@@ -629,24 +525,42 @@
             document.getElementById('addTransactionModal').classList.add('hidden');
         });
         
-        // Close modal when clicking outside
         document.getElementById('addTransactionModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.add('hidden');
-            }
+            if (e.target === this) this.classList.add('hidden');
+        });
+
+        document.querySelectorAll('#addTransactionModal button[data-type]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                selectedType = this.dataset.type;
+                this.classList.add('bg-blue-50', 'text-blue-600', 'border-blue-100');
+                this.classList.remove('text-gray-600', 'border-gray-200');
+                document.querySelectorAll('#addTransactionModal button[data-type]').forEach(otherBtn => {
+                    if (otherBtn !== this) {
+                        otherBtn.classList.remove('bg-blue-50', 'text-blue-600', 'border-blue-100');
+                        otherBtn.classList.add('text-gray-600', 'border-gray-200');
+                    }
+                });
+            });
+        });
+
+        document.getElementById('saveTransactionBtn').addEventListener('click', async () => {
+            const transaction = {
+                type: selectedType,
+                amount: parseFloat(document.getElementById('transactionAmount').value),
+                category: document.getElementById('transactionCategory').value,
+                date: document.getElementById('transactionDate').value,
+                description: document.getElementById('transactionDescription').value,
+                account: document.getElementById('transactionAccount').value
+            };
+            await addTransaction(transaction);
+            document.getElementById('addTransactionModal').classList.add('hidden');
         });
         
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             initCharts();
-            
-            // Simulate loading data
-            setTimeout(() => {
-                document.querySelectorAll('.skeleton').forEach(el => {
-                    el.classList.remove('skeleton');
-                });
-            }, 1000);
+            loadTransactions();
         });
     </script>
 </body>
