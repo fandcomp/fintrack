@@ -175,6 +175,17 @@
         .social-btn:hover {
             transform: translateY(-5px);
         }
+        
+        /* Tambahan untuk mode sign-up */
+        .hidden {
+            display: none;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 <body>
@@ -191,8 +202,8 @@
                 <div class="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 pulse">
                     <i class="fas fa-wallet text-white text-3xl"></i>
                 </div>
-                <h1 class="text-3xl font-bold text-white">FinTrack</h1>
-                <p class="text-blue-200 mt-2">Take control of your personal finances</p>
+                <h1 id="formTitle" class="text-3xl font-bold text-white">FinTrack</h1>
+                <p id="formSubtitle" class="text-blue-200 mt-2">Take control of your personal finances</p>
             </div>
             
             <!-- Login form -->
@@ -211,6 +222,7 @@
                             required
                         >
                     </div>
+                    <div id="emailError" class="error-message"></div>
                 </div>
                 
                 <div class="animate-in animate-delay-2">
@@ -225,14 +237,15 @@
                         <input 
                             type="password" 
                             id="password" 
-                            class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-blue-300 focus:outline-none" 
+                            class="input-field w-full pl-10 pr-10 py-3 rounded-xl text-white placeholder-blue-300 focus:outline-none" 
                             placeholder="••••••••"
                             required
                         >
-                        <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300">
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
+                    <div id="passwordError" class="error-message"></div>
                 </div>
                 
                 <div class="animate-in animate-delay-3">
@@ -253,8 +266,91 @@
                 </div>
             </form>
             
+            <!-- Sign Up Form (Awalnya tersembunyi) -->
+            <form id="signupForm" class="space-y-6 hidden">
+                <div class="animate-in animate-delay-1">
+                    <label class="block text-blue-100 text-sm font-medium mb-2">Full Name</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-user text-blue-300"></i>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-blue-300 focus:outline-none" 
+                            placeholder="John Doe"
+                            required
+                        >
+                    </div>
+                    <div id="nameError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in animate-delay-2">
+                    <label class="block text-blue-100 text-sm font-medium mb-2">Email</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-envelope text-blue-300"></i>
+                        </div>
+                        <input 
+                            type="email" 
+                            id="signupEmail" 
+                            class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-blue-300 focus:outline-none" 
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+                    <div id="signupEmailError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in animate-delay-3">
+                    <label class="block text-blue-100 text-sm font-medium mb-2">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-lock text-blue-300"></i>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="signupPassword" 
+                            class="input-field w-full pl-10 pr-10 py-3 rounded-xl text-white placeholder-blue-300 focus:outline-none" 
+                            placeholder="••••••••"
+                            required
+                        >
+                        <button type="button" id="toggleSignupPassword" class="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="signupPasswordError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in animate-delay-4">
+                    <label class="block text-blue-100 text-sm font-medium mb-2">Confirm Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-lock text-blue-300"></i>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            class="input-field w-full pl-10 pr-10 py-3 rounded-xl text-white placeholder-blue-300 focus:outline-none" 
+                            placeholder="••••••••"
+                            required
+                        >
+                        <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="confirmPasswordError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in animate-delay-5">
+                    <button type="submit" class="btn-login w-full py-3 px-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl transition duration-300">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+            
             <!-- Divider -->
-            <div class="relative my-8 animate-in">
+            <div id="divider" class="relative my-8 animate-in">
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-blue-500 border-opacity-30"></div>
                 </div>
@@ -264,7 +360,7 @@
             </div>
             
             <!-- Social login -->
-            <div class="grid grid-cols-3 gap-3 animate-in">
+            <div id="socialLogin" class="grid grid-cols-3 gap-3 animate-in">
                 <button class="social-btn py-2 px-4 bg-blue-900 bg-opacity-50 rounded-lg text-blue-200 hover:bg-blue-800 transition">
                     <i class="fab fa-google"></i>
                 </button>
@@ -277,10 +373,18 @@
             </div>
             
             <!-- Sign up link -->
-            <div class="text-center mt-8 animate-in">
+            <div id="signupPrompt" class="text-center mt-8 animate-in">
                 <p class="text-blue-200">
                     Don't have an account? 
-                    <a href="#" class="font-semibold text-white hover:text-blue-300 transition">Sign up</a>
+                    <a href="#" id="toggleSignup" class="font-semibold text-white hover:text-blue-300 transition">Sign up</a>
+                </p>
+            </div>
+            
+            <!-- Back to login link -->
+            <div id="loginPrompt" class="text-center mt-8 animate-in hidden">
+                <p class="text-blue-200">
+                    Already have an account? 
+                    <a href="#" id="toggleLogin" class="font-semibold text-white hover:text-blue-300 transition">Sign in</a>
                 </p>
             </div>
         </div>
@@ -292,12 +396,94 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15c3FhdWhvcWpmd2J4ZW1sdWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTM3MDksImV4cCI6MjA2NTcyOTcwOX0.KasP79jM_6HJke1Fj9Evv4XQyqlglteBYJFGpQUgsjs';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         
+        // Elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const toggleSignup = document.getElementById('toggleSignup');
+        const toggleLogin = document.getElementById('toggleLogin');
+        const formTitle = document.getElementById('formTitle');
+        const formSubtitle = document.getElementById('formSubtitle');
+        const divider = document.getElementById('divider');
+        const socialLogin = document.getElementById('socialLogin');
+        const signupPrompt = document.getElementById('signupPrompt');
+        const loginPrompt = document.getElementById('loginPrompt');
+        
+        // Toggle between login and signup forms
+        toggleSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            formTitle.textContent = 'Create Account';
+            formSubtitle.textContent = 'Start your financial journey with us';
+            divider.classList.add('hidden');
+            socialLogin.classList.add('hidden');
+            signupPrompt.classList.add('hidden');
+            loginPrompt.classList.remove('hidden');
+        });
+        
+        toggleLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            formTitle.textContent = 'FinTrack';
+            formSubtitle.textContent = 'Take control of your personal finances';
+            divider.classList.remove('hidden');
+            socialLogin.classList.remove('hidden');
+            signupPrompt.classList.remove('hidden');
+            loginPrompt.classList.add('hidden');
+        });
+        
+        // Password visibility toggle
+        function setupPasswordToggle(passwordId, toggleButtonId) {
+            const passwordInput = document.getElementById(passwordId);
+            const toggleButton = document.getElementById(toggleButtonId);
+            
+            if (passwordInput && toggleButton) {
+                toggleButton.addEventListener('click', () => {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    const icon = toggleButton.querySelector('i');
+                    if (type === 'password') {
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    } else {
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    }
+                });
+            }
+        }
+        
+        // Setup password toggles
+        setupPasswordToggle('password', 'togglePassword');
+        setupPasswordToggle('signupPassword', 'toggleSignupPassword');
+        setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+        
         // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            
+            // Clear previous errors
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            
+            // Validation
+            let isValid = true;
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
             
             // Show loading state
             const submitBtn = document.querySelector('#loginForm button[type="submit"]');
@@ -319,27 +505,110 @@
                 window.location.href = '/dashboard.html';
             } catch (error) {
                 // Reset button
-                submitBtn.textContent = originalBtnText;
+                submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 
                 // Show error message
-                alert('Login failed: ' + error.message);
+                if (error.message.includes('Invalid login credentials')) {
+                    document.getElementById('passwordError').textContent = 'Invalid email or password';
+                } else {
+                    alert('Login failed: ' + error.message);
+                }
             }
         });
         
-        // Password visibility toggle
-        document.querySelector('button[type="button"]').addEventListener('click', function() {
-            const passwordInput = document.getElementById('password');
-            const icon = this.querySelector('i');
+        // Handle signup form submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Clear previous errors
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('signupEmailError').textContent = '';
+            document.getElementById('signupPasswordError').textContent = '';
+            document.getElementById('confirmPasswordError').textContent = '';
+            
+            // Validation
+            let isValid = true;
+            if (!fullName) {
+                document.getElementById('nameError').textContent = 'Full name is required';
+                isValid = false;
+            }
+            
+            if (!email) {
+                document.getElementById('signupEmailError').textContent = 'Email is required';
+                isValid = false;
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                document.getElementById('signupEmailError').textContent = 'Email is invalid';
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('signupPasswordError').textContent = 'Password is required';
+                isValid = false;
+            } else if (password.length < 6) {
+                document.getElementById('signupPasswordError').textContent = 'Password must be at least 6 characters';
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Show loading state
+            const submitBtn = document.querySelector('#signupForm button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creating account...';
+            submitBtn.disabled = true;
+            
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: fullName
+                        }
+                    }
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Signup successful
+                alert('Account created successfully! Please check your email to verify your account.');
+                
+                // Switch back to login form
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                formTitle.textContent = 'FinTrack';
+                formSubtitle.textContent = 'Take control of your personal finances';
+                divider.classList.remove('hidden');
+                socialLogin.classList.remove('hidden');
+                signupPrompt.classList.remove('hidden');
+                loginPrompt.classList.add('hidden');
+                
+                // Clear form
+                signupForm.reset();
+            } catch (error) {
+                // Reset button
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                
+                // Show error message
+                if (error.message.includes('User already registered')) {
+                    document.getElementById('signupEmailError').textContent = 'Email already registered';
+                } else {
+                    alert('Signup failed: ' + error.message);
+                }
             }
         });
         
