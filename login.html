@@ -1,481 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinTrack - Modern Login</title>
+    <title>FinTrack - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #10b981;
-            --dark: #0f172a;
-            --light: #f1f5f9;
-            --gradient-start: #6366f1;
-            --gradient-end: #8b5cf6;
-        }
-        
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #1e3a8a, #0f172a);
             height: 100vh;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0;
-            padding: 0;
         }
         
         .login-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: translateY(0);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 100%;
-            max-width: 420px;
-            margin: 0 20px;
-            z-index: 10;
-        }
-        
-        .login-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .card-content {
-            position: relative;
-            z-index: 2;
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2.5rem;
-        }
-        
-        .animate-in {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .input-field {
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(15, 23, 42, 0.5);
-            color: white;
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border-radius: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             width: 100%;
-            outline: none;
+            max-width: 400px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
         
-        .input-field:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
-            background: rgba(15, 23, 42, 0.7);
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
         }
         
-        .floating-bg {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
-            animation: rotate 25s linear infinite;
-            z-index: 1;
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
         }
         
-        .floating-bg:nth-child(2) {
-            animation-duration: 40s;
-            opacity: 0.6;
+        .logo p {
+            color: #cbd5e1;
         }
         
-        .floating-bg:nth-child(3) {
-            animation-duration: 60s;
-            opacity: 0.3;
+        .input-group {
+            margin-bottom: 1.5rem;
         }
         
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
         }
         
         .btn-login {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
-            border: none;
-            border-radius: 12px;
-            padding: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
             width: 100%;
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
         }
         
         .btn-login:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px rgba(99, 102, 241, 0.4);
+            background: #2563eb;
         }
         
-        .btn-login:active {
-            transform: translateY(1px);
-        }
-        
-        .btn-login::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
-            transform: scale(0);
-            transition: transform 0.6s;
-        }
-        
-        .btn-login:hover::after {
-            transform: scale(1);
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-            }
-        }
-        
-        .social-btn {
-            transition: all 0.3s ease;
-            transform: translateY(0);
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 0.75rem;
+        .signup-link {
             text-align: center;
-            color: white;
-            cursor: pointer;
+            margin-top: 1.5rem;
+            color: #cbd5e1;
         }
         
-        .social-btn:hover {
-            transform: translateY(-5px);
-            background: rgba(30, 41, 59, 0.8);
+        .signup-link a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
         }
         
-        .hidden {
-            display: none;
+        .signup-link a:hover {
+            text-decoration: underline;
         }
         
         .error-message {
             color: #ef4444;
             font-size: 0.875rem;
-            margin-top: 0.25rem;
-            height: 20px;
-        }
-        
-        .success-message {
-            color: #10b981;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            height: 20px;
-        }
-        
-        .form-switch {
-            animation: formSwitch 0.6s ease-out forwards;
-        }
-        
-        @keyframes formSwitch {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .input-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            cursor: pointer;
-        }
-        
-        .logo-container {
-            width: 5rem;
-            height: 5rem;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        }
-        
-        .logo-icon {
-            font-size: 2.5rem;
-            color: white;
-        }
-        
-        .divider {
-            position: relative;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 2rem 0;
-        }
-        
-        .divider-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(15, 23, 42, 0.7);
-            padding: 0 1rem;
-            color: #94a3b8;
-            font-size: 0.875rem;
-        }
-        
-        .floating-element {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%);
-            z-index: 0;
-        }
-        
-        @media (max-width: 480px) {
-            .card-content {
-                padding: 1.5rem;
-            }
-            
-            .login-card {
-                max-width: 90%;
-            }
+            margin-top: 0.5rem;
         }
     </style>
 </head>
 <body>
-    <!-- Floating background elements -->
-    <div class="floating-bg"></div>
-    <div class="floating-bg"></div>
-    <div class="floating-bg"></div>
-    
-    <!-- Additional floating elements for visual effect -->
-    <div class="floating-element" style="width: 200px; height: 200px; top: 10%; left: 15%;"></div>
-    <div class="floating-element" style="width: 150px; height: 150px; bottom: 20%; right: 20%;"></div>
-    <div class="floating-element" style="width: 100px; height: 100px; top: 30%; right: 15%;"></div>
-    
-    <!-- Login card -->
     <div class="login-card">
-        <div class="card-content">
-            <!-- Logo and title -->
-            <div class="text-center mb-8 animate-in">
-                <div class="logo-container pulse">
-                    <i class="fas fa-wallet logo-icon"></i>
-                </div>
-                <h1 id="formTitle" class="text-3xl font-bold text-white mb-2">FinTrack</h1>
-                <p id="formSubtitle" class="text-indigo-200">Take control of your personal finances</p>
+        <div class="logo">
+            <h1><i class="fas fa-wallet mr-2"></i>FinTrack</h1>
+            <p>Kelola keuangan pribadi Anda</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="email@contoh.com">
+                <div id="emailError" class="error-message"></div>
             </div>
             
-            <!-- Login form -->
-            <form id="loginForm" class="space-y-5">
-                <div class="animate-in">
-                    <label class="block text-slate-200 text-sm font-medium mb-2">Email</label>
-                    <div class="relative">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            class="input-field" 
-                            placeholder="you@example.com"
-                            required
-                        >
-                    </div>
-                    <div id="emailError" class="error-message"></div>
-                </div>
-                
-                <div class="animate-in">
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="block text-slate-200 text-sm font-medium">Password</label>
-                        <a href="#" class="text-sm font-medium text-indigo-300 hover:text-indigo-200 transition">Forgot password?</a>
-                    </div>
-                    <div class="relative">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            class="input-field" 
-                            placeholder="••••••••"
-                            required
-                        >
-                        <i id="togglePassword" class="fas fa-eye password-toggle"></i>
-                    </div>
-                    <div id="passwordError" class="error-message"></div>
-                </div>
-                
-                <div class="animate-in flex items-center">
-                    <input 
-                        type="checkbox" 
-                        id="remember" 
-                        class="w-4 h-4 text-indigo-600 bg-slate-700 border-slate-600 rounded focus:ring-indigo-600 focus:ring-offset-slate-800 focus:ring-2"
-                    >
-                    <label for="remember" class="ml-2 text-sm font-medium text-slate-200">Remember me</label>
-                </div>
-                
-                <div class="animate-in">
-                    <button type="submit" class="btn-login bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-                        Sign In
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Sign Up Form -->
-            <form id="signupForm" class="space-y-5 hidden">
-                <div class="animate-in">
-                    <label class="block text-slate-200 text-sm font-medium mb-2">Full Name</label>
-                    <div class="relative">
-                        <i class="fas fa-user input-icon"></i>
-                        <input 
-                            type="text" 
-                            id="fullName" 
-                            class="input-field" 
-                            placeholder="John Doe"
-                            required
-                        >
-                    </div>
-                    <div id="nameError" class="error-message"></div>
-                </div>
-                
-                <div class="animate-in">
-                    <label class="block text-slate-200 text-sm font-medium mb-2">Email</label>
-                    <div class="relative">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input 
-                            type="email" 
-                            id="signupEmail" 
-                            class="input-field" 
-                            placeholder="you@example.com"
-                            required
-                        >
-                    </div>
-                    <div id="signupEmailError" class="error-message"></div>
-                </div>
-                
-                <div class="animate-in">
-                    <label class="block text-slate-200 text-sm font-medium mb-2">Password</label>
-                    <div class="relative">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="signupPassword" 
-                            class="input-field" 
-                            placeholder="••••••••"
-                            required
-                        >
-                        <i id="toggleSignupPassword" class="fas fa-eye password-toggle"></i>
-                    </div>
-                    <div id="signupPasswordError" class="error-message"></div>
-                </div>
-                
-                <div class="animate-in">
-                    <label class="block text-slate-200 text-sm font-medium mb-2">Confirm Password</label>
-                    <div class="relative">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="confirmPassword" 
-                            class="input-field" 
-                            placeholder="••••••••"
-                            required
-                        >
-                        <i id="toggleConfirmPassword" class="fas fa-eye password-toggle"></i>
-                    </div>
-                    <div id="confirmPasswordError" class="error-message"></div>
-                </div>
-                
-                <div class="animate-in">
-                    <button type="submit" class="btn-login bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
-                        Create Account
-                    </button>
-                </div>
-            </form>
-            
-            <!-- Divider -->
-            <div id="divider" class="divider">
-                <span class="divider-text">Or continue with</span>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="••••••••">
+                <div id="passwordError" class="error-message"></div>
             </div>
             
-            <!-- Social login -->
-            <div id="socialLogin" class="grid grid-cols-3 gap-3 animate-in">
-                <button class="social-btn">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button class="social-btn">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-                <button class="social-btn">
-                    <i class="fab fa-apple"></i>
-                </button>
-            </div>
-            
-            <!-- Sign up link -->
-            <div id="signupPrompt" class="text-center mt-6 animate-in">
-                <p class="text-slate-300">
-                    Don't have an account? 
-                    <a href="#" id="toggleSignup" class="font-semibold text-white hover:text-indigo-300 transition">Sign up</a>
-                </p>
-            </div>
-            
-            <!-- Back to login link -->
-            <div id="loginPrompt" class="text-center mt-6 animate-in hidden">
-                <p class="text-slate-300">
-                    Already have an account? 
-                    <a href="#" id="toggleLogin" class="font-semibold text-white hover:text-indigo-300 transition">Sign in</a>
-                </p>
-            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+        
+        <div class="signup-link">
+            Belum punya akun? <a href="signup.html">Buat Akun Baru</a>
         </div>
     </div>
 
@@ -485,65 +141,8 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15c3FhdWhvcWpmd2J4ZW1sdWZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNTM3MDksImV4cCI6MjA2NTcyOTcwOX0.KasP79jM_6HJke1Fj9Evv4XQyqlglteBYJFGpQUgsjs';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
         
-        // Elements
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const toggleSignup = document.getElementById('toggleSignup');
-        const toggleLogin = document.getElementById('toggleLogin');
-        
-        // Toggle between login and signup forms with animation
-        toggleSignup.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginForm.classList.add('hidden');
-            signupForm.classList.remove('hidden');
-            formTitle.textContent = 'Create Account';
-            formSubtitle.textContent = 'Start your financial journey with us';
-            divider.classList.add('hidden');
-            socialLogin.classList.add('hidden');
-            signupPrompt.classList.add('hidden');
-            loginPrompt.classList.remove('hidden');
-        });
-        
-        toggleLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupForm.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-            formTitle.textContent = 'FinTrack';
-            formSubtitle.textContent = 'Take control of your personal finances';
-            divider.classList.remove('hidden');
-            socialLogin.classList.remove('hidden');
-            signupPrompt.classList.remove('hidden');
-            loginPrompt.classList.add('hidden');
-        });
-        
-        // Password visibility toggle
-        function setupPasswordToggle(passwordId, toggleButtonId) {
-            const passwordInput = document.getElementById(passwordId);
-            const toggleButton = document.getElementById(toggleButtonId);
-            
-            if (passwordInput && toggleButton) {
-                toggleButton.addEventListener('click', () => {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    
-                    if (type === 'password') {
-                        toggleButton.classList.remove('fa-eye-slash');
-                        toggleButton.classList.add('fa-eye');
-                    } else {
-                        toggleButton.classList.remove('fa-eye');
-                        toggleButton.classList.add('fa-eye-slash');
-                    }
-                });
-            }
-        }
-        
-        // Setup password toggles
-        setupPasswordToggle('password', 'togglePassword');
-        setupPasswordToggle('signupPassword', 'toggleSignupPassword');
-        setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
-        
         // Handle login form submission
-        loginForm.addEventListener('submit', async (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
@@ -556,18 +155,12 @@
             // Validation
             let isValid = true;
             if (!email) {
-                document.getElementById('emailError').textContent = 'Email is required';
-                isValid = false;
-            } else if (!/\S+@\S+\.\S+/.test(email)) {
-                document.getElementById('emailError').textContent = 'Email is invalid';
+                document.getElementById('emailError').textContent = 'Email wajib diisi';
                 isValid = false;
             }
             
             if (!password) {
-                document.getElementById('passwordError').textContent = 'Password is required';
-                isValid = false;
-            } else if (password.length < 6) {
-                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('passwordError').textContent = 'Password wajib diisi';
                 isValid = false;
             }
             
@@ -576,195 +169,38 @@
             // Show loading state
             const submitBtn = document.querySelector('#loginForm button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Signing in...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
             submitBtn.disabled = true;
             
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
+                // Check credentials against Supabase
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('password', password)
+                    .single();
                 
-                if (error) {
-                    throw error;
+                if (error || !data) {
+                    throw new Error('Email atau password salah');
                 }
                 
-                // Simulate successful login
-                submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Success!';
-                submitBtn.classList.remove('from-indigo-600', 'to-purple-600');
-                submitBtn.classList.add('from-green-500', 'to-emerald-500');
+                // Simpan session di localStorage
+                localStorage.setItem('auth', JSON.stringify({
+                    userId: data.id,
+                    email: data.email
+                }));
                 
-                setTimeout(() => {
-                    // Reset button
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('from-green-500', 'to-emerald-500');
-                    submitBtn.classList.add('from-indigo-600', 'to-purple-600');
-                    
-                    // Show success message
-                    document.getElementById('passwordError').textContent = '';
-                    document.getElementById('passwordError').classList.remove('error-message');
-                    document.getElementById('passwordError').classList.add('success-message');
-                    document.getElementById('passwordError').textContent = 'Login successful! Redirecting...';
-                    
-                    // Redirect after delay
-                    setTimeout(() => {
-                        window.location.href = '/dashboard.html';
-                    }, 1500);
-                }, 1000);
+                // Redirect to dashboard
+                window.location.href = 'dashboard.html';
             } catch (error) {
                 // Reset button
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
                 
                 // Show error message
-                if (error.message.includes('Invalid login credentials')) {
-                    document.getElementById('passwordError').textContent = 'Invalid email or password';
-                } else {
-                    document.getElementById('passwordError').textContent = 'Login failed: ' + error.message;
-                }
+                document.getElementById('passwordError').textContent = error.message;
             }
-        });
-        
-        // Handle signup form submission
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            // Clear previous errors
-            document.getElementById('nameError').textContent = '';
-            document.getElementById('signupEmailError').textContent = '';
-            document.getElementById('signupPasswordError').textContent = '';
-            document.getElementById('confirmPasswordError').textContent = '';
-            
-            // Validation
-            let isValid = true;
-            if (!fullName) {
-                document.getElementById('nameError').textContent = 'Full name is required';
-                isValid = false;
-            }
-            
-            if (!email) {
-                document.getElementById('signupEmailError').textContent = 'Email is required';
-                isValid = false;
-            } else if (!/\S+@\S+\.\S+/.test(email)) {
-                document.getElementById('signupEmailError').textContent = 'Email is invalid';
-                isValid = false;
-            }
-            
-            if (!password) {
-                document.getElementById('signupPasswordError').textContent = 'Password is required';
-                isValid = false;
-            } else if (password.length < 6) {
-                document.getElementById('signupPasswordError').textContent = 'Password must be at least 6 characters';
-                isValid = false;
-            }
-            
-            if (password !== confirmPassword) {
-                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-                isValid = false;
-            }
-            
-            if (!isValid) return;
-            
-            // Show loading state
-            const submitBtn = document.querySelector('#signupForm button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creating account...';
-            submitBtn.disabled = true;
-            
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            full_name: fullName
-                        }
-                    }
-                });
-                
-                if (error) {
-                    throw error;
-                }
-                
-                // Signup successful
-                submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Account Created!';
-                submitBtn.classList.remove('from-emerald-600', 'to-teal-600');
-                submitBtn.classList.add('from-green-500', 'to-emerald-500');
-                
-                // Simpan data pengguna tambahan jika diperlukan
-                if (data.user) {
-                    const user = data.user;
-                    
-                    // Di sini Anda bisa menyimpan data tambahan ke tabel khusus jika diperlukan
-                    // Contoh: 
-                    // await supabase
-                    //   .from('user_profiles')
-                    //   .insert([{ user_id: user.id, full_name: fullName }]);
-                }
-                
-                setTimeout(() => {
-                    // Reset button
-                    submitBtn.innerHTML = originalBtnText;
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('from-green-500', 'to-emerald-500');
-                    submitBtn.classList.add('from-emerald-600', 'to-teal-600');
-                    
-                    // Show success message
-                    document.getElementById('confirmPasswordError').textContent = '';
-                    document.getElementById('confirmPasswordError').classList.remove('error-message');
-                    document.getElementById('confirmPasswordError').classList.add('success-message');
-                    document.getElementById('confirmPasswordError').textContent = 'Account created successfully! Check your email.';
-                    
-                    // Auto switch to login after delay
-                    setTimeout(() => {
-                        toggleLogin.click();
-                        signupForm.reset();
-                    }, 2000);
-                }, 1000);
-            } catch (error) {
-                // Reset button
-                submitBtn.innerHTML = originalBtnText;
-                submitBtn.disabled = false;
-                
-                // Show error message
-                if (error.message.includes('User already registered')) {
-                    document.getElementById('signupEmailError').textContent = 'Email already registered';
-                } else {
-                    document.getElementById('signupEmailError').textContent = 'Signup failed: ' + error.message;
-                }
-            }
-        });
-        
-        // Add animation to form elements when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add animation delay to each child element
-            const animateElements = document.querySelectorAll('.animate-in');
-            animateElements.forEach((el, index) => {
-                el.style.animationDelay = `${index * 0.1}s`;
-            });
-            
-            // Initialize password toggles
-            document.querySelectorAll('.password-toggle').forEach(icon => {
-                icon.addEventListener('click', function() {
-                    const input = this.previousElementSibling;
-                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                    input.setAttribute('type', type);
-                    
-                    if (type === 'password') {
-                        this.classList.remove('fa-eye-slash');
-                        this.classList.add('fa-eye');
-                    } else {
-                        this.classList.remove('fa-eye');
-                        this.classList.add('fa-eye-slash');
-                    }
-                });
-            });
         });
     </script>
 </body>
