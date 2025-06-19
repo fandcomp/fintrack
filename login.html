@@ -8,11 +8,476 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ... (CSS tetap sama seperti sebelumnya) ... */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #0f172a;
+            --light: #f1f5f9;
+            --gradient-start: #6366f1;
+            --gradient-end: #8b5cf6;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #0f172a);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .login-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(0);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            max-width: 420px;
+            margin: 0 20px;
+            z-index: 10;
+        }
+        
+        .login-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-content {
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.5);
+            color: white;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border-radius: 12px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
+            background: rgba(15, 23, 42, 0.7);
+        }
+        
+        .floating-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+            animation: rotate 25s linear infinite;
+            z-index: 1;
+        }
+        
+        .floating-bg:nth-child(2) {
+            animation-duration: 40s;
+            opacity: 0.6;
+        }
+        
+        .floating-bg:nth-child(3) {
+            animation-duration: 60s;
+            opacity: 0.3;
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .btn-login {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-login:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-login::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+            transform: scale(0);
+            transition: transform 0.6s;
+        }
+        
+        .btn-login:hover::after {
+            transform: scale(1);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+            }
+        }
+        
+        .social-btn {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.8);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            height: 20px;
+        }
+        
+        .success-message {
+            color: #10b981;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            height: 20px;
+        }
+        
+        .form-switch {
+            animation: formSwitch 0.6s ease-out forwards;
+        }
+        
+        @keyframes formSwitch {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        
+        .logo-container {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .divider {
+            position: relative;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .divider-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 23, 42, 0.7);
+            padding: 0 1rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%);
+            z-index: 0;
+        }
+        
+        @media (max-width: 480px) {
+            .card-content {
+                padding: 1.5rem;
+            }
+            
+            .login-card {
+                max-width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- ... (HTML struktur tetap sama) ... -->
+    <!-- Floating background elements -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    
+    <!-- Additional floating elements for visual effect -->
+    <div class="floating-element" style="width: 200px; height: 200px; top: 10%; left: 15%;"></div>
+    <div class="floating-element" style="width: 150px; height: 150px; bottom: 20%; right: 20%;"></div>
+    <div class="floating-element" style="width: 100px; height: 100px; top: 30%; right: 15%;"></div>
+    
+    <!-- Login card -->
+    <div class="login-card">
+        <div class="card-content">
+            <!-- Logo and title -->
+            <div class="text-center mb-8 animate-in">
+                <div class="logo-container pulse">
+                    <i class="fas fa-wallet logo-icon"></i>
+                </div>
+                <h1 id="formTitle" class="text-3xl font-bold text-white mb-2">FinTrack</h1>
+                <p id="formSubtitle" class="text-indigo-200">Take control of your personal finances</p>
+            </div>
+            
+            <!-- Login form -->
+            <form id="loginForm" class="space-y-5">
+                <div class="animate-in">
+                    <label class="block text-slate-200 text-sm font-medium mb-2">Email</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="input-field" 
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+                    <div id="emailError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-slate-200 text-sm font-medium">Password</label>
+                        <a href="#" class="text-sm font-medium text-indigo-300 hover:text-indigo-200 transition">Forgot password?</a>
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="input-field" 
+                            placeholder="••••••••"
+                            required
+                        >
+                        <i id="togglePassword" class="fas fa-eye password-toggle"></i>
+                    </div>
+                    <div id="passwordError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in flex items-center">
+                    <input 
+                        type="checkbox" 
+                        id="remember" 
+                        class="w-4 h-4 text-indigo-600 bg-slate-700 border-slate-600 rounded focus:ring-indigo-600 focus:ring-offset-slate-800 focus:ring-2"
+                    >
+                    <label for="remember" class="ml-2 text-sm font-medium text-slate-200">Remember me</label>
+                </div>
+                
+                <div class="animate-in">
+                    <button type="submit" class="btn-login bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                        Sign In
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form id="signupForm" class="space-y-5 hidden">
+                <div class="animate-in">
+                    <label class="block text-slate-200 text-sm font-medium mb-2">Full Name</label>
+                    <div class="relative">
+                        <i class="fas fa-user input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            class="input-field" 
+                            placeholder="John Doe"
+                            required
+                        >
+                    </div>
+                    <div id="nameError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in">
+                    <label class="block text-slate-200 text-sm font-medium mb-2">Email</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="signupEmail" 
+                            class="input-field" 
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+                    <div id="signupEmailError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in">
+                    <label class="block text-slate-200 text-sm font-medium mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="signupPassword" 
+                            class="input-field" 
+                            placeholder="••••••••"
+                            required
+                        >
+                        <i id="toggleSignupPassword" class="fas fa-eye password-toggle"></i>
+                    </div>
+                    <div id="signupPasswordError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in">
+                    <label class="block text-slate-200 text-sm font-medium mb-2">Confirm Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            class="input-field" 
+                            placeholder="••••••••"
+                            required
+                        >
+                        <i id="toggleConfirmPassword" class="fas fa-eye password-toggle"></i>
+                    </div>
+                    <div id="confirmPasswordError" class="error-message"></div>
+                </div>
+                
+                <div class="animate-in">
+                    <button type="submit" class="btn-login bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Divider -->
+            <div id="divider" class="divider">
+                <span class="divider-text">Or continue with</span>
+            </div>
+            
+            <!-- Social login -->
+            <div id="socialLogin" class="grid grid-cols-3 gap-3 animate-in">
+                <button class="social-btn">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button class="social-btn">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="social-btn">
+                    <i class="fab fa-apple"></i>
+                </button>
+            </div>
+            
+            <!-- Sign up link -->
+            <div id="signupPrompt" class="text-center mt-6 animate-in">
+                <p class="text-slate-300">
+                    Don't have an account? 
+                    <a href="#" id="toggleSignup" class="font-semibold text-white hover:text-indigo-300 transition">Sign up</a>
+                </p>
+            </div>
+            
+            <!-- Back to login link -->
+            <div id="loginPrompt" class="text-center mt-6 animate-in hidden">
+                <p class="text-slate-300">
+                    Already have an account? 
+                    <a href="#" id="toggleLogin" class="font-semibold text-white hover:text-indigo-300 transition">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Initialize Supabase
